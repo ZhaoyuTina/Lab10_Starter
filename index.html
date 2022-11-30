@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <title>Lab 10 - Return of the Party Horn</title>
@@ -14,15 +14,11 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/partyHorn.js" type="module"></script>
-  <dependency>
-    <groupId>com.launchdarkly</groupId>
-    <artifactId>launchdarkly-java-server-sdk</artifactId>
-    <version>5.10.3</version>
-  </dependency>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 
-<body>
+<body class="blue">
   <header>
     <nav>
       <a href="speechSynth.html" title="Go to speech synthesizer">Speech Synthesizer</a>
@@ -48,23 +44,32 @@
       <audio class="hidden" src=""></audio>
     </section>
   </main>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>App</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <script>
+    // Set up the user properties. This user should appear on your LaunchDarkly users dashboard
+    // soon after you run the demo.
+    var user = {
+      name: 'Zhaoyu Zhang',
+      key: 'blue-background',
+    };
+
+    var div = document.createElement('div');
+    document.body.appendChild(div);
+
+    div.appendChild(document.createTextNode('Initializing...'));
+
+    // Create a new LDClient instance with your environment-specific SDK key
+    var ldclient = LDClient.initialize('6387cd1a6a8bd7119c8d222d', user);
+
+    function render() {
+      var flagValue = ldclient.variation('blue-background', false);
+      var label = (flagValue ? 'Showing' : 'Not showing') + ' your feature to ' + user.key;
+      console.log("SDK successfully connected! The value of blue-background is " + flagValue + " for " + user.key)
+      div.replaceChild(document.createTextNode(label), div.firstChild);
+    }
+
+    ldclient.on('ready', render);
+    ldclient.on('change', render);
+  </script>
 </body>
 
 
