@@ -11,6 +11,9 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/speechSynth.js" type="module"></script>
+
+  <!-- Use LaunchDarkly sdk -->
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
@@ -32,6 +35,42 @@
       <button>Press to Talk</button>
     </section>
   </main>
+  <script>
+    // generate random key
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZzbcdefghijklmnopqrstuvwxyz0123456789-';
+    const charLength = characters.length;
+    for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charLength));
+    }
+
+    // Set up the user properties. This user should appear on your LaunchDarkly users dashboard
+    // soon after you run the demo.
+    let user = {
+      key: result,
+    };
+
+    
+
+   
+    // Create a new LDClient instance with your environment-specific SDK key
+    var ldclient = LDClient.initialize('63870637131dd6118e3629fe', user);
+
+    function render() {
+      let flagValue = ldclient.variation('emoji-placeholder', false);
+      if (flagValue) {
+        console.log("here");
+        const textBox = document.getElementById("text-to-speak");
+        console.log(textBox.placeholder);
+        textBox.placeholder = "🦤🍦🍜 What you want to say?";
+        console.log(textBox.placeholder);
+      }
+      console.log("SDK successfully connected! The value of emoji-placeholder is " + flagValue + " for " + user.key); 
+    }
+
+    ldclient.on('ready', render);
+    ldclient.on('change', render);
+  </script>
 </body>
 
 </html>
