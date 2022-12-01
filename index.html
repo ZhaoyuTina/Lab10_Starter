@@ -18,7 +18,7 @@
 </head>
 
 
-<body class="blue">
+<body>
   <header>
     <nav>
       <a href="speechSynth.html" title="Go to speech synthesizer">Speech Synthesizer</a>
@@ -45,26 +45,33 @@
     </section>
   </main>
   <script>
+    // generate random key
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZzbcdefghijklmnopqrstuvwxyz0123456789-';
+    const charLength = characters.length;
+    for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charLength));
+    }
+
+
+
     // Set up the user properties. This user should appear on your LaunchDarkly users dashboard
     // soon after you run the demo.
-    var user = {
-      name: 'Zhaoyu Zhang',
-      key: 'blue-background',
+    let user = {
+      key: result,
     };
 
-    var div = document.createElement('div');
-    document.body.appendChild(div);
-
-    div.appendChild(document.createTextNode('Initializing...'));
-
+    
+    
     // Create a new LDClient instance with your environment-specific SDK key
-    var ldclient = LDClient.initialize('6387cd1a6a8bd7119c8d222d', user);
+    let ldclient = LDClient.initialize('6387cd1a6a8bd7119c8d222d', user);
 
     function render() {
-      var flagValue = ldclient.variation('blue-background', false);
-      var label = (flagValue ? 'Showing' : 'Not showing') + ' your feature to ' + user.key;
+      let flagValue = ldclient.variation('blue-background', false);
+      if (flagValue) {
+        document.body.classList.add('blue')
+      }
       console.log("SDK successfully connected! The value of blue-background is " + flagValue + " for " + user.key)
-      div.replaceChild(document.createTextNode(label), div.firstChild);
     }
 
     ldclient.on('ready', render);
