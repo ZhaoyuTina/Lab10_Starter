@@ -1,5 +1,7 @@
 # Lab 10 - Starter
 
+Author: Zhaoyu Zhang
+
 Here's my [Cannyio page](https://cse110-lab10-zhaoyutina.canny.io/)
 
 Here's link to [index.html](https://zhaoyutina.github.io/Lab10_Starter/)
